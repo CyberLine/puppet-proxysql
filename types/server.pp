@@ -1,6 +1,7 @@
 # @summary Represents a ProxySQL server.
 type Proxysql::Server = Array[Hash[String, Struct[{ Optional[port]                => Integer,
                                                     hostgroup_id                  => Integer,
+                                                    Optional[gtid_port]           => Integer,
                                                     Optional[status]              => String[1],
                                                     Optional[weight]              => Integer,
                                                     Optional[compression]         => Integer,
