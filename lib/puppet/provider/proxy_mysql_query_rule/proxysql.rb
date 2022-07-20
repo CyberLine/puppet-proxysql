@@ -21,13 +21,18 @@ Puppet::Type.type(:proxy_mysql_query_rule).provide(:proxysql, parent: Puppet::Pr
     rules.map do |rule_id|
       query = 'SELECT `active`, `username`, `schemaname`, `flagIN`, `flagOUT`, `apply`, '
       query << ' `client_addr`, `proxy_addr`, `proxy_port`, `destination_hostgroup`, '
+      if has_gtid_tracking?
+        query << ' `gtid_from_hostgroup`, '
+      else
+        query << " NULL AS 'gtid_from_hostgroup', "
+      end
       query << ' `digest`, `match_digest`, `match_pattern`, `negate_match_pattern`, `replace_pattern`, '
       query << ' `cache_ttl`, `reconnect`, `multiplex`, `timeout`, `retries`, `delay`, `error_msg`, `log`, `comment`, '
       query << ' `mirror_flagOUT`, `mirror_hostgroup`'
       query << " FROM `mysql_query_rules` WHERE rule_id = '#{rule_id}'"
 
       @active, @username, @schemaname, @flag_in, @flag_out, @apply,
-      @client_addr, @proxy_addr, @proxy_port, @destination_hostgroup,
+      @client_addr, @proxy_addr, @proxy_port, @destination_hostgroup, @gtid_from_hostgroup,
       @digest, @match_digest, @match_pattern, @negate_match_pattern, @replace_pattern,
       @cache_ttl, @reconnect, @multiplex, @timeout, @retries, @delay, @error_msg, @log, @comment,
       @mirror_flag_out, @mirror_hostgroup = mysql([defaults_file, '-NBe', query].compact).to_s.chomp.split(%r{\t})
@@ -51,6 +56,7 @@ Puppet::Type.type(:proxy_mysql_query_rule).provide(:proxysql, parent: Puppet::Pr
         proxy_addr: @proxy_addr,
         proxy_port: @proxy_port,
         destination_hostgroup: @destination_hostgroup,
+        gtid_from_hostgroup: @gtid_from_hostgroup,
         digest: @digest,
         match_digest: @match_digest,
         match_pattern: @match_pattern,
@@ -95,6 +101,7 @@ Puppet::Type.type(:proxy_mysql_query_rule).provide(:proxysql, parent: Puppet::Pr
     proxy_addr = make_sql_value(@resource.value(:proxy_addr) || nil)
     proxy_port = make_sql_value(@resource.value(:proxy_port) || nil)
     destination_hostgroup = make_sql_value(@resource.value(:destination_hostgroup) || nil)
+    gtid_from_hostgroup = make_sql_value(@resource.value(:gtid_from_hostgroup) || nil)
     digest = make_sql_value(@resource.value(:digest) || nil)
     match_digest = make_sql_value(@resource.value(:match_digest) || nil)
     match_pattern = make_sql_value(@resource.value(:match_pattern) || nil)
@@ -115,11 +122,13 @@ Puppet::Type.type(:proxy_mysql_query_rule).provide(:proxysql, parent: Puppet::Pr
     query = 'INSERT INTO `mysql_query_rules` ('
     query << '`rule_id`, `active`, `username`, `schemaname`, `flagIN`, `flagOUT`, `apply`, '
     query << '`client_addr`, `proxy_addr`, `proxy_port`, `destination_hostgroup`, '
+    query << ' `gtid_from_hostgroup`, ' if has_gtid_tracking?
     query << '`digest`, `match_digest`, `match_pattern`, `negate_match_pattern`, `replace_pattern`, '
     query << '`cache_ttl`, `reconnect`, `multiplex`, `timeout`, `retries`, `delay`, `error_msg`, `log`, `comment`, '
     query << '`mirror_flagOUT`, `mirror_hostgroup`) VALUES ('
     query << "#{rule_id}, #{active}, #{username}, #{schemaname}, #{flag_in}, #{flag_out}, #{apply}, "
     query << "#{client_addr}, #{proxy_addr}, #{proxy_port}, #{destination_hostgroup}, "
+    query << " #{gtid_from_hostgroup}, " if has_gtid_tracking?
     query << "#{digest}, #{match_digest}, #{match_pattern}, #{negate_match_pattern}, #{replace_pattern}, "
     query << "#{cache_ttl}, #{reconnect}, #{multiplex}, #{timeout}, #{retries}, #{delay}, #{error_msg}, #{log}, #{comment}, "
     query << "#{mirror_flag_out}, #{mirror_hostgroup})"
@@ -216,6 +225,10 @@ Puppet::Type.type(:proxy_mysql_query_rule).provide(:proxysql, parent: Puppet::Pr
 
   def destination_hostgroup=(value)
     @property_flush[:destination_hostgroup] = value
+  end
+
+  def gtid_from_hostgroup(value)
+    @property_flush[:gtid_from_hostgroup] = value
   end
 
   def digest=(value)

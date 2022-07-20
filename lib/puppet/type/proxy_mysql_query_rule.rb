@@ -108,6 +108,11 @@ Puppet::Type.newtype(:proxy_mysql_query_rule) do
     newvalue(%r{\d+})
   end
 
+  newproperty(:gtid_from_hostgroup) do
+    desc 'The hostgroup to check replication lag from gtid against'
+    newvalue(%r{\d+})
+  end
+
   newproperty(:cache_ttl) do
     desc 'The amount of miliseconds to cache the result of this query.'
     newvalue(%r{\d+})

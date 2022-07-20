@@ -15,6 +15,7 @@ type Proxysql::Rule = Array[Hash[String, Struct[{ rule_id                       
                                                   Optional[replace_pattern]       => String[1],
                                                   Optional[negate_match_pattern]  => Integer[0,1],
                                                   Optional[destination_hostgroup] => Integer,
+                                                  Optional[gtid_from_hostgroup]   => Integer,
                                                   Optional[cache_ttl]             => Integer,
                                                   Optional[reconnect]             => Integer[0,1],
                                                   Optional[multiplex]             => Integer[0,1],
