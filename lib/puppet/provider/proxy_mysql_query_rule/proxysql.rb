@@ -42,7 +42,7 @@ Puppet::Type.type(:proxy_mysql_query_rule).provide(:proxysql, parent: Puppet::Pr
       @negate_match_pattern = normalise_pattern(@negate_match_pattern)
       @replace_pattern = normalise_pattern(@replace_pattern)
 
-      instance = new(
+      instances << new(
         name: name,
         ensure: :present,
         rule_id: rule_id,
@@ -74,8 +74,6 @@ Puppet::Type.type(:proxy_mysql_query_rule).provide(:proxysql, parent: Puppet::Pr
         mirror_flag_out: @mirror_flag_out,
         mirror_hostgroup: @mirror_hostgroup
       )
-      p instance
-      instances << instance
     end
     instances
   end
@@ -158,6 +156,7 @@ Puppet::Type.type(:proxy_mysql_query_rule).provide(:proxysql, parent: Puppet::Pr
   end
 
   def flush
+    p @property_hash
     update_query_rule(@property_flush) if @property_flush
     @property_hash.clear
 
