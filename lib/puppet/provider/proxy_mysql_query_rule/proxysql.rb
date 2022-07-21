@@ -122,13 +122,13 @@ Puppet::Type.type(:proxy_mysql_query_rule).provide(:proxysql, parent: Puppet::Pr
     query = 'INSERT INTO `mysql_query_rules` ('
     query << '`rule_id`, `active`, `username`, `schemaname`, `flagIN`, `flagOUT`, `apply`, '
     query << '`client_addr`, `proxy_addr`, `proxy_port`, `destination_hostgroup`, '
-    query << ' `gtid_from_hostgroup`, ' if has_gtid_tracking?
+    query << '`gtid_from_hostgroup`, ' if has_gtid_tracking?
     query << '`digest`, `match_digest`, `match_pattern`, `negate_match_pattern`, `replace_pattern`, '
     query << '`cache_ttl`, `reconnect`, `multiplex`, `timeout`, `retries`, `delay`, `error_msg`, `log`, `comment`, '
     query << '`mirror_flagOUT`, `mirror_hostgroup`) VALUES ('
     query << "#{rule_id}, #{active}, #{username}, #{schemaname}, #{flag_in}, #{flag_out}, #{apply}, "
     query << "#{client_addr}, #{proxy_addr}, #{proxy_port}, #{destination_hostgroup}, "
-    query << " #{gtid_from_hostgroup}, " if has_gtid_tracking?
+    query << "#{gtid_from_hostgroup}, " if has_gtid_tracking?
     query << "#{digest}, #{match_digest}, #{match_pattern}, #{negate_match_pattern}, #{replace_pattern}, "
     query << "#{cache_ttl}, #{reconnect}, #{multiplex}, #{timeout}, #{retries}, #{delay}, #{error_msg}, #{log}, #{comment}, "
     query << "#{mirror_flag_out}, #{mirror_hostgroup})"
