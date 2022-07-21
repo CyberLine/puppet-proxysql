@@ -30,7 +30,7 @@ Puppet::Type.type(:proxy_mysql_query_rule).provide(:proxysql, parent: Puppet::Pr
       query << ' `cache_ttl`, `reconnect`, `multiplex`, `timeout`, `retries`, `delay`, `error_msg`, `log`, `comment`, '
       query << ' `mirror_flagOUT`, `mirror_hostgroup`'
       query << " FROM `mysql_query_rules` WHERE rule_id = '#{rule_id}'"
-
+      p query.to_s
       @active, @username, @schemaname, @flag_in, @flag_out, @apply,
       @client_addr, @proxy_addr, @proxy_port, @destination_hostgroup, @gtid_from_hostgroup,
       @digest, @match_digest, @match_pattern, @negate_match_pattern, @replace_pattern,
@@ -156,7 +156,6 @@ Puppet::Type.type(:proxy_mysql_query_rule).provide(:proxysql, parent: Puppet::Pr
   end
 
   def flush
-    p @property_hash
     update_query_rule(@property_flush) if @property_flush
     @property_hash.clear
 
