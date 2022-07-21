@@ -37,7 +37,7 @@ Puppet::Type.type(:proxy_mysql_query_rule).provide(:proxysql, parent: Puppet::Pr
       @cache_ttl, @reconnect, @multiplex, @timeout, @retries, @delay, @error_msg, @log, @comment,
       @mirror_flag_out, @mirror_hostgroup = mysql([defaults_file, '-NBe', query].compact).to_s.chomp.split(%r{\t})
       name = "mysql_query_rule-#{rule_id}"
-      p @gtid_from_hostgroup
+
       @match_pattern = normalise_pattern(@match_pattern)
       @negate_match_pattern = normalise_pattern(@negate_match_pattern)
       @replace_pattern = normalise_pattern(@replace_pattern)
@@ -226,7 +226,7 @@ Puppet::Type.type(:proxy_mysql_query_rule).provide(:proxysql, parent: Puppet::Pr
     @property_flush[:destination_hostgroup] = value
   end
 
-  def gtid_from_hostgroup(value)
+  def gtid_from_hostgroup=(value)
     @property_flush[:gtid_from_hostgroup] = value
   end
 
