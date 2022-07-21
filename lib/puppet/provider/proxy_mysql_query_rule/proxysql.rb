@@ -85,6 +85,7 @@ Puppet::Type.type(:proxy_mysql_query_rule).provide(:proxysql, parent: Puppet::Pr
     resources.keys.each do |name|
       provider = rules.find { |rule| rule.name == name }
       resources[name].provider = provider if provider
+      puts resources[name]
     end
   end
 

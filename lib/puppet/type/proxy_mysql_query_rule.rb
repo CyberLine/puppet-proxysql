@@ -109,7 +109,7 @@ Puppet::Type.newtype(:proxy_mysql_query_rule) do
   end
 
   newproperty(:gtid_from_hostgroup) do
-    desc 'The hostgroup to check replication lag from gtid against'
+    desc 'The hostgroup to check replication lag from gtid against. ProxySQL 2.0+ only.'
     newvalue(%r{\d+})
   end
 
