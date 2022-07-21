@@ -85,7 +85,6 @@ Puppet::Type.type(:proxy_mysql_query_rule).provide(:proxysql, parent: Puppet::Pr
     resources.keys.each do |name|
       provider = rules.find { |rule| rule.name == name }
       resources[name].provider = provider if provider
-      puts resources[name]
     end
   end
 
@@ -181,7 +180,8 @@ Puppet::Type.type(:proxy_mysql_query_rule).provide(:proxysql, parent: Puppet::Pr
     query = 'UPDATE `mysql_query_rules` SET '
     query << values.join(', ')
     query << " WHERE `rule_id` = '#{rule_id}'"
-
+    puts query
+    puts values
     mysql([defaults_file, '-e', query].compact)
   end
 
