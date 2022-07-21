@@ -30,14 +30,14 @@ Puppet::Type.type(:proxy_mysql_query_rule).provide(:proxysql, parent: Puppet::Pr
       query << ' `cache_ttl`, `reconnect`, `multiplex`, `timeout`, `retries`, `delay`, `error_msg`, `log`, `comment`, '
       query << ' `mirror_flagOUT`, `mirror_hostgroup`'
       query << " FROM `mysql_query_rules` WHERE rule_id = '#{rule_id}'"
-      p query.to_s
+
       @active, @username, @schemaname, @flag_in, @flag_out, @apply,
       @client_addr, @proxy_addr, @proxy_port, @destination_hostgroup, @gtid_from_hostgroup,
       @digest, @match_digest, @match_pattern, @negate_match_pattern, @replace_pattern,
       @cache_ttl, @reconnect, @multiplex, @timeout, @retries, @delay, @error_msg, @log, @comment,
       @mirror_flag_out, @mirror_hostgroup = mysql([defaults_file, '-NBe', query].compact).to_s.chomp.split(%r{\t})
       name = "mysql_query_rule-#{rule_id}"
-
+      p @gtid_from_hostgroup
       @match_pattern = normalise_pattern(@match_pattern)
       @negate_match_pattern = normalise_pattern(@negate_match_pattern)
       @replace_pattern = normalise_pattern(@replace_pattern)
